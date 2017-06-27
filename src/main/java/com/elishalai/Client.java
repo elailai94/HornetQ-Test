@@ -2,17 +2,25 @@ package com.elishalai;
 
 import java.util.HashMap;
 
+import org.hornetq.api.core.SimpleString;
 import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.api.core.client.ClientConsumer;
 import org.hornetq.api.core.client.ClientMessage;
 import org.hornetq.api.core.client.ClientProducer;
 import org.hornetq.api.core.client.ClientSession;
+import org.hornetq.api.core.client.ClientSession.QueueQuery;
 import org.hornetq.api.core.client.ClientSessionFactory;
 import org.hornetq.api.core.client.HornetQClient;
 import org.hornetq.api.core.client.ServerLocator;
 import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
 
 public class Client {
+  private static final String queueName = "testQueue";
+
+  private void createQueue() throws Exception {
+
+  }
+
   public static void main(String[] args) throws Exception {
     try {
       // Set configuration values
@@ -20,16 +28,27 @@ public class Client {
       map.put("host", "localhost");
       map.put("port", 5445);
 
-      ServerLocator serverLocator = HornetQClient.createServerLocatorWithoutHA(
-        new TransportConfiguration(NettyConnectorFactory.class.getName(), map)
-      );
+      TransportConfiguration transportConfiguration =
+        new TransportConfiguration(NettyConnectorFactory.class.getName(), map);
+      ServerLocator serverLocator =
+        HornetQClient.createServerLocatorWithoutHA(transportConfiguration);
 
       ClientSessionFactory clientSessionFactory =
         serverLocator.createSessionFactory();
 
       ClientSession clientSession =
+        clientSessionFactory.createSession(false, false, false);
+
+      SimpleString simpleString = new SimpleString(queueName);
+      QueueQuery queueQuery = session.queueQuery(simpleString);
+      if (!queueQuery.isExists()) {
+        clientSession.createQueue(queueName, queueName, true);
+      }
+
+      clientSession.close();
     }
   }
+
 /*
   public static void main(String[] args) throws Exception {
     try {
