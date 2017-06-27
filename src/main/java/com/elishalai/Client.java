@@ -1,5 +1,6 @@
 package com.elishalai;
 
+import java.util.Date;
 import java.util.HashMap;
 
 import org.hornetq.api.core.SimpleString;
@@ -16,10 +17,8 @@ import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
 
 public class Client {
   private static final String queueName = "testQueue";
-
-  private void createQueue() throws Exception {
-
-  }
+  private static final int numMessages = 10;
+  private static final String propName = "testProperty";
 
   public static void main(String[] args) throws Exception {
     try {
@@ -40,38 +39,49 @@ public class Client {
         clientSessionFactory.createSession(false, false, false);
 
       SimpleString simpleString = new SimpleString(queueName);
-      QueueQuery queueQuery = session.queueQuery(simpleString);
+      QueueQuery queueQuery = clientSession.queueQuery(simpleString);
       if (!queueQuery.isExists()) {
         clientSession.createQueue(queueName, queueName, true);
       }
 
       clientSession.close();
-    }
-  }
+      clientSession = null;
 
-/*
-  public static void main(String[] args) throws Exception {
-    try {
-      // Load the file configuration first of all
-      FileConfiguration configuration = new FileConfiguration();
-      configuration.setConfigurationUrl("hornetq-configuration.xml");
-      configuration.start();
+      try {
+        clientSession = clientSessionFactory.createSession();
 
-      // Create a new instance of a HornetQ server
-      HornetQServer server = HornetQServers.newHornetQServer(configuration);
+        ClientProducer clientProducer = clientSession.createProducer(queueName);
+        for (int i = 0; i < numMessages; i++) {
+          ClientMessage messageToServer = clientSession.createMessage(true);
+          messageToServer.putStringProperty(propName, "Hello sent at " + new Date());
+          //System.out.println("Sending the message.");
+          clientProducer.send(messageToServer);
+        }
 
-      // Wrap the HornetQ server instance inside a JMS server
-      JMSServerManager jmsServerManager = new JMSServerManagerImpl(
-        server, "hornetq-jms.xml");
+        ClientConsumer clientConsumer = clientSession.createConsumer(queueName);
+        clientSession.start();
+        for (int i = 0; i < numMessages; i++) {
+          ClientMessage messageFromServer = clientConsumer.receive(1000);
+          //System.out.println("Received TextMessage:" + messageFromServer.getStringProperty(propName));
+        }
+      } finally {
+        if (clientSession != null) {
+          clientSession.close();
+        }
 
-      // Start the server
-      jmsServerManager.start();
+        if (clientSessionFactory != null) {
+          clientSessionFactory.close();
+        }
 
-      System.out.println("HornetQ server started successfully.");
-    } catch (Throwable e) {
-      System.out.println("An error has occured. HornetQ server was unable to start.");
+        if (serverLocator != null) {
+          serverLocator.close();
+        }
+      }
+
+      System.out.println("HornetQ Client executed successfully.");
+    } catch (Exception e) {
+      System.out.println("HornetQ Client wasn't able to execute successfully. An error has occured");
       e.printStackTrace();
     }
   }
-*/
 }
