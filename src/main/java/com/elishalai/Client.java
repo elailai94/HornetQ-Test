@@ -42,7 +42,7 @@ public class Client {
       QueueQuery queueQuery = clientSession.queueQuery(simpleString);
       if (!queueQuery.isExists()) {
         clientSession.createQueue(queueName, queueName, true);
-      }
+      } 
 
       clientSession.close();
       clientSession = null;
@@ -54,16 +54,19 @@ public class Client {
         for (int i = 0; i < numMessages; i++) {
           ClientMessage messageToServer = clientSession.createMessage(true);
           messageToServer.putStringProperty(propName, "Hello sent at " + new Date());
-          //System.out.println("Sending the message.");
+          System.out.println("Sending the message.");
           clientProducer.send(messageToServer);
         }
 
         ClientConsumer clientConsumer = clientSession.createConsumer(queueName);
         clientSession.start();
+        
         for (int i = 0; i < numMessages; i++) {
-          ClientMessage messageFromServer = clientConsumer.receive(1000);
-          //System.out.println("Received TextMessage:" + messageFromServer.getStringProperty(propName));
+          ClientMessage messageFromServer = clientConsumer.receive(3000);
+          System.out.println("Received TextMessage:" + messageFromServer.getStringProperty(propName));
         }
+
+        clientSession.stop();
       } finally {
         if (clientSession != null) {
           clientSession.close();
