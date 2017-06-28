@@ -55,10 +55,15 @@ public class Consumer {
 
         session.start();
 
-        final long start = System.currentTimeMillis();
+        final long startTime = System.currentTimeMillis();
+        
         for (int i = 0; i < numMessages; i++) {
           ClientMessage message = consumer.receive(1000);
         }
+        
+        final long endTime = System.currentTimeMillis();
+        final double averageThroughput = calculateAverageThroughput(startTime, endTime);
+        System.out.println("Average throughput: " + averageThroughput);
 
         session.stop();
       } finally {
@@ -80,5 +85,13 @@ public class Consumer {
       System.out.println("Consumer wasn't able to execute successfully. An error has occurred.");
       e.printStackTrace();
     }
+  }
+
+  // Calculates average throughput of the consumer
+  private static double calculateAverageThroughput(long startTime, long endTime) {
+    double duration = (1.0 * endTime - startTime) / 1000;
+    double averageThroughput = 1.0 * numMessages / duration;
+    
+    return averageThroughput;
   }
 }
