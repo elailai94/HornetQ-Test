@@ -1,3 +1,11 @@
+//=============================================================================
+// HornetQ-Tests
+//
+// @description: Module for providing functions to work with Client objects
+// @author: Elisha Lai
+// @version: 1.0 27/06/2017
+//=============================================================================
+
 package com.elishalai;
 
 import java.util.Date;
@@ -17,7 +25,7 @@ import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
 
 public class Client {
   private static final String queueName = "testQueue";
-  private static final int numMessages = 10;
+  private static final int numMessages = 500000;
   private static final String propName = "testProperty";
 
   public static void main(String[] args) throws Exception {
@@ -41,7 +49,7 @@ public class Client {
       SimpleString simpleString = new SimpleString(queueName);
       QueueQuery queueQuery = clientSession.queueQuery(simpleString);
       if (!queueQuery.isExists()) {
-        clientSession.createQueue(queueName, queueName, true);
+        clientSession.createQueue(queueName, queueName, false);
       } 
 
       clientSession.close();
@@ -54,7 +62,7 @@ public class Client {
         for (int i = 0; i < numMessages; i++) {
           ClientMessage messageToServer = clientSession.createMessage(true);
           messageToServer.putStringProperty(propName, "Hello sent at " + new Date());
-          System.out.println("Sending the message.");
+          //System.out.println("Sending the message.");
           clientProducer.send(messageToServer);
         }
 
@@ -63,7 +71,7 @@ public class Client {
         
         for (int i = 0; i < numMessages; i++) {
           ClientMessage messageFromServer = clientConsumer.receive(3000);
-          System.out.println("Received TextMessage:" + messageFromServer.getStringProperty(propName));
+          //System.out.println("Received TextMessage:" + messageFromServer.getStringProperty(propName));
         }
 
         clientSession.stop();
