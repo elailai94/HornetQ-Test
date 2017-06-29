@@ -61,4 +61,5 @@ case $OS in
 esac
 
 # Validate project directory
+echo "Validating project directory..."
 mvn validate
