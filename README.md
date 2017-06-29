@@ -2,6 +2,11 @@
 ### About
 This repository contains a collection of scripts to test the performance and scalability of HornetQ. They are written entirely in Java.
 
+### Setup
+In one terminal window, download the HornetQ binaries and install packages by running:
+```Bash
+./setup.sh
+```
 ### Execution
 In one terminal window, start the HornetQ standalone server by running:
 ```Bash
