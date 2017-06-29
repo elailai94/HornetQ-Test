@@ -43,4 +43,4 @@ mvn -Pproducer package
 ```
 
 ### To Dos
-- Single client with 4kB message
+- Single producer/consumer on a single node with 1 million messages, 4kB each
