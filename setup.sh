@@ -34,4 +34,4 @@ sudo apt-get install libaio1
 echo "Installing Maven package"
 sudo apt-get install maven
 # Validate project directory
-# mvn validate
+mvn validate
