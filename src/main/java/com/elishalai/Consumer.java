@@ -11,14 +11,28 @@ package com.elishalai;
 import java.util.Date;
 import java.util.HashMap;
 
-import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.api.core.client.ClientConsumer;
 import org.hornetq.api.core.client.ClientMessage;
 import org.hornetq.api.core.client.ClientSession;
 import org.hornetq.api.core.client.ClientSessionFactory;
-import org.hornetq.api.core.client.HornetQClient;
-import org.hornetq.api.core.client.ServerLocator;
-import org.hornetq.core.remoting.impl.netty.NettyConnectorFactory;
+
+public class Consumer {
+  private static final String QUEUE_NAME = "testQueue";
+
+  private static int numMessages = -1;
+  private ClientSession session = null;
+
+  public static void main(String[] args) throws Exception {
+    
+  }
+
+  // Constructor
+  private Consumer(String serverAddress, int serverPort) {
+    super(serverAddress, serverPort);
+  }
+
+  
+}
 
 public class Consumer {
   private static final String queueName = "testQueue";

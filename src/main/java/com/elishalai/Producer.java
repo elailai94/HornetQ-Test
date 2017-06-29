@@ -8,19 +8,28 @@
 
 package com.elishalai;
 
+import java.util.Date;
 
+import org.hornetq.api.core.SimpleString;
 import org.hornetq.api.core.client.ClientMessage;
 import org.hornetq.api.core.client.ClientProducer;
 import org.hornetq.api.core.client.ClientSession;
+import org.hornetq.api.core.client.ClientSession.QueueQuery;
 import org.hornetq.api.core.client.ClientSessionFactory;
 
 public class Producer extends BaseClient {
-  private ClientSessionFactory sessionFactory = null;
+  private static final String QUEUE_NAME = "testQueue";
+  
+  private static int numMessages = -1;
   private ClientSession session = null;
 
   public static void main(String[] args) throws Exception {
     try {
-      new Producer().run();
+      String serverAddress = args[0];
+      int serverPort = Integer.parseInt(args[1]);
+      numMessages = Integer.parseInt(args[2]);
+      
+      new Producer(serverAddress, serverPort).run();
       System.out.println("Producer executed successfully.");
     } catch (Exception e) {
       System.out.println("Producer wasn't able to execute successfully. An error has occurred.");
@@ -29,32 +38,61 @@ public class Producer extends BaseClient {
   }
 
   // Constructor
-  private Producer() {
-    String serverAddress = "localhost";
-    int serverPort = 5445;
+  private Producer(String serverAddress, int serverPort) {
     super(serverAddress, serverPort);
   }
 
   // Send messages to the server
-  private run() throws Exception {
+  private void run() throws Exception {
     try {
-      // 
+      // Initialize the base client
       initialize();
-      sessionFactory = getSessionFactory();
 
-      // Create a session
-      session = sessionFactory.createSession(false, false, false);
+      // Create a session to check if the queue exists
+      session = getSessionFactory().createSession(false, false, false);
 
-      SimpleString simpleString = new SimpleString(queueName);
+      // Check if the queue exists. If not, create the queue
+      SimpleString simpleString = new SimpleString(QUEUE_NAME);
       QueueQuery queueQuery = session.queueQuery(simpleString);
       if (!queueQuery.isExists()) {
-        session.createQueue(queueName, queueName, false);
+        session.createQueue(QUEUE_NAME, QUEUE_NAME, false);
       }
 
-      clientSession.close();
-      clientSession = null;
-    } finally {
+      session.close();
+      session = null;
 
+      // Create a session to produce messages
+      session = getSessionFactory().createSession();
+
+      // Create a producer to produce messages to the queue
+      ClientProducer producer = session.createProducer(QUEUE_NAME);
+
+      final long startTime = System.currentTimeMillis();
+
+      // Produce messages to the queue
+      for (int i = 0; i < numMessages; i++) {
+        ClientMessage message = session.createMessage(true);
+        String propName = "timestamp";
+        message.putStringProperty(propName, "Hello sent at " + new Date());
+        producer.send(message);
+      }
+
+      final long endTime = System.currentTimeMillis();
+
+      // Calculate the throughput of the producer
+      final double throughput =
+        calculateThroughput(numMessages, startTime, endTime);
+      System.out.println(
+        String.format("Throughtput: %.2f msg/s", throughput));
+    } catch (Exception e) {
+      throw e;
+    } finally {
+      if (session != null) {
+        session.close();
+      }
+
+      // Clean up the base client
+      cleanup();
     }
   }
 }
