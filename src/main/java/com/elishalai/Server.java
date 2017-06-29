@@ -10,7 +10,6 @@ package com.elishalai;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 
 import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.core.config.Configuration;
@@ -27,7 +26,7 @@ public class Server {
       configuration.setPersistenceEnabled(false);
       configuration.setSecurityEnabled(false);
 
-      Map<String, Object> parameters = new HashMap<String, Object>();
+      HashMap<String, Object> parameters = new HashMap<String, Object>();
       parameters.put("host", "localhost");
       parameters.put("port", 5445);
 
