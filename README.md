@@ -3,7 +3,7 @@
 This repository contains a collection of scripts to test the performance and scalability of HornetQ. They are written entirely in Java.
 
 ### Execution
-In a terminal window, start the HornetQ standalone server by running:
+In one terminal window, start the HornetQ standalone server by running:
 ```Bash
 cd bin
 ./run.sh
