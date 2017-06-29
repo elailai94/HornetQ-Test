@@ -22,10 +22,11 @@ wget http://downloads.jboss.org/hornetq/hornetq-2.4.0.Final-bin.tar.gz
 echo "Unzipping HornetQ distribution..."
 tar -xvzf hornetq-2.4.0.Final-bin.tar.gz
 
-# Move HornetQ binaries and configurations to the project directory
-echo "Moving HornetQ binaries and configurations to the project directory..."
+# Move HornetQ binaries, configurations and libraries to the project directory
+echo "Moving HornetQ binaries, configurations and libraries to the project directory..."
 mv hornetq-2.4.0.Final/bin bin
 mv hornetq-2.4.0.Final/config config
+mv hornetq-2.4.0.Final/lib lib
 
 # Remove unnecessary files
 echo "Removing unnecessary files..."
@@ -36,6 +37,9 @@ rm -rf hornetq-2.4.0.Final
 OS="`uname`"
 case $OS in
   'Linux')
+    # Resynchronizing package index files from their sources
+    echo "Resynchronizing package index files from their sources..."
+    sudo apt-get update
     # Install AIO package
     echo "Installing AIO package..."
     sudo apt-get install libaio1

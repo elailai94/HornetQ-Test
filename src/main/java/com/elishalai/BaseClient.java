@@ -9,6 +9,7 @@
 package com.elishalai;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.api.core.client.ClientSessionFactory;
@@ -32,7 +33,7 @@ public abstract class BaseClient {
   // Perform client initialization
   protected void initialize() throws Exception {
     // Set parameters needed to create the connection to the server
-    HashMap<String, Object> parameters = new HashMap<String, Object>();
+    Map<String, Object> parameters = new HashMap<String, Object>();
     parameters.put("host", serverAddress);
     parameters.put("port", serverPort);
 

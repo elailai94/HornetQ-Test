@@ -10,6 +10,7 @@ package com.elishalai;
 
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 import org.hornetq.api.core.TransportConfiguration;
 import org.hornetq.core.config.Configuration;
@@ -26,12 +27,14 @@ public class Server {
       configuration.setPersistenceEnabled(false);
       configuration.setSecurityEnabled(false);
 
-      HashMap<String, Object> map = new HashMap<String, Object>();
-      map.put("host", "localhost");
-      map.put("port", 5445);
+      Map<String, Object> parameters = new HashMap<String, Object>();
+      parameters.put("host", "localhost");
+      parameters.put("port", 5445);
 
       TransportConfiguration transportConfiguration =
-        new TransportConfiguration(NettyAcceptorFactory.class.getName(), map);
+        new TransportConfiguration(
+          NettyAcceptorFactory.class.getName(), parameters
+        );
 
       HashSet<TransportConfiguration> setTransp =
         new HashSet<TransportConfiguration>();
