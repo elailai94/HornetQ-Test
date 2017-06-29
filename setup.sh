@@ -67,3 +67,5 @@ esac
 # Validate project directory
 echo "Validating project directory..."
 mvn validate
+
+echo "Setup complete."
