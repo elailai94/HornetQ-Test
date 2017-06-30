@@ -19,6 +19,7 @@ import org.hornetq.api.core.client.ClientSessionFactory;
 
 public class Producer extends BaseClient {
   private static final String QUEUE_NAME = "testQueue";
+  private static final String PROPERTY_NAME = "timestamp";
   
   private static int numMessages = -1;
   private ClientSession session = null;
@@ -67,21 +68,20 @@ public class Producer extends BaseClient {
       // Create a producer to produce messages to the queue
       ClientProducer producer = session.createProducer(QUEUE_NAME);
 
-      final long startTime = System.currentTimeMillis();
-
       // Produce messages to the queue
+      long duration = 0;
       for (int i = 0; i < numMessages; i++) {
         ClientMessage message = session.createMessage(true);
-        String propName = "timestamp";
-        message.putStringProperty(propName, "Hello sent at " + new Date());
+        message.putLongProperty(PROPERTY_NAME, System.currentTimeMillis());
+
+        long startTime = System.currentTimeMillis();
         producer.send(message);
+        long endTime = System.currentTimeMillis();
+        duration += endTime - startTime;
       }
 
-      final long endTime = System.currentTimeMillis();
-
       // Calculate the throughput of the producer
-      final double throughput =
-        calculateThroughput(numMessages, startTime, endTime);
+      double throughput = calculateThroughput(numMessages, duration);
       System.out.println(
         String.format("Throughtput: %.2f msg/s", throughput));
     } catch (Exception e) {

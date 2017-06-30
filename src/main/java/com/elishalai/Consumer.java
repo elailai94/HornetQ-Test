@@ -68,19 +68,20 @@ public class Consumer extends BaseClient {
       ClientConsumer consumer = session.createConsumer(QUEUE_NAME);
 
       session.start();
-      final long startTime = System.currentTimeMillis();
       
-      // Consume messages from the queue  
+      // Consume messages from the queue
+      long duration = 0; 
       for (int i = 0; i < numMessages; i++) {
+        long startTime = System.currentTimeMillis();
         ClientMessage message = consumer.receive(0);
+        long endTime = System.currentTimeMillis();
+        duration += endTime - startTime;
       }
-        
-      final long endTime = System.currentTimeMillis();
+
       session.stop();
 
       // Calculate the throughput of the producer
-      final double throughput =
-        calculateThroughput(numMessages, startTime, endTime);
+      double throughput = calculateThroughput(numMessages, duration);
       System.out.println(
         String.format("Throughtput: %.2f msg/s", throughput));
     } catch (Exception e) {

@@ -45,7 +45,7 @@ case $OS in
     sudo apt-get install libaio1
     # Install Maven package
     echo "Installing Maven package..."
-    sudo apt-get install maven2
+    sudo apt-get install maven
     ;;
   'Darwin')
     # Check if Homebrew is already installed
