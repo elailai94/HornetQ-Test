@@ -35,11 +35,11 @@ cd bin
 ```
 In another terminal window, start the consumer by running:
 ```Bash
-mvn -Pconsumer package
+mvn -T 1C -DskipTests -Pconsumer package
 ```
 In another terminal window, start the producer by running:
 ```Bash
-mvn -Pproducer package
+mvn -T 1C -DskipTests -Pproducer package
 ```
 
 ### To Dos

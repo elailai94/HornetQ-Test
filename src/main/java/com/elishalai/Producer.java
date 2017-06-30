@@ -24,6 +24,7 @@ public class Producer extends BaseClient {
   private static final String BODY_KEY = "body";
   
   private static int numMessages = -1;
+  private static int messageSize = -1;
   private ClientSession session = null;
 
   public static void main(String[] args) throws Exception {
@@ -31,6 +32,7 @@ public class Producer extends BaseClient {
       String serverAddress = args[0];
       int serverPort = Integer.parseInt(args[1]);
       numMessages = Integer.parseInt(args[2]);
+      messageSize = Integer.parseInt(args[3]);
       
       new Producer(serverAddress, serverPort).run();
       System.out.println("Producer executed successfully.");
@@ -74,9 +76,8 @@ public class Producer extends BaseClient {
       long duration = 0;
       for (int i = 0; i < numMessages; i++) {
         ClientMessage message = session.createMessage(true);
-        message.putLongProperty(TIMESTAMP_KEY, System.currentTimeMillis());
-        message.putBytesProperty(BODY_KEY, generateMessageBody(1024));
-        System.out.println("Payload size: " + message.getEncodeSize());
+        //message.putLongProperty(TIMESTAMP_KEY, System.currentTimeMillis());
+        message.putBytesProperty(BODY_KEY, generateMessageBody(messageSize));
 
         long startTime = System.currentTimeMillis();
         producer.send(message);
@@ -87,7 +88,7 @@ public class Producer extends BaseClient {
       // Calculate the throughput of the producer
       double throughput = calculateThroughput(numMessages, duration);
       System.out.println(
-        String.format("Throughtput: %.2f msg/s", throughput));
+        String.format("Throughput: %.2f msg/s", throughput));
     } catch (Exception e) {
       throw e;
     } finally {

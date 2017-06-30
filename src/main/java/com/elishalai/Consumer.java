@@ -74,14 +74,15 @@ public class Consumer extends BaseClient {
       long duration = 0; 
       for (int i = 0; i < numMessages; i++) {
         long startTime = System.currentTimeMillis();
-        ClientMessage message = consumer.receive(0);
+        ClientMessage message = consumer.receive();
         long endTime = System.currentTimeMillis();
         duration += endTime - startTime;
-
+/*
         long sentTimestamp = message.getLongProperty(TIMESTAMP_KEY);
         long receivedTimestamp = System.currentTimeMillis();
         long latency = receivedTimestamp - sentTimestamp;
         System.out.println("Latency: " + latency + "ms");
+*/
       }
 
       session.stop();
@@ -89,7 +90,7 @@ public class Consumer extends BaseClient {
       // Calculate the throughput of the producer
       double throughput = calculateThroughput(numMessages, duration);
       System.out.println(
-        String.format("Throughtput: %.2f msg/s", throughput));
+        String.format("Throughput: %.2f msg/s", throughput));
     } catch (Exception e) {
       throw e;
     } finally {
