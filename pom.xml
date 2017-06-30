@@ -92,7 +92,7 @@
               <arguments>
                 <argument>localhost</argument>
                 <argument>5445</argument>
-                <argument>100</argument>
+                <argument>2</argument>
               </arguments>
             </configuration>
           </plugin>
@@ -128,7 +128,7 @@
               <arguments>
                 <argument>localhost</argument>
                 <argument>5445</argument>
-                <argument>100</argument>
+                <argument>2</argument>
               </arguments>
             </configuration>
           </plugin>

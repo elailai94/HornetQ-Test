@@ -19,6 +19,7 @@ import org.hornetq.api.core.client.ClientSessionFactory;
 
 public class Consumer extends BaseClient {
   private static final String QUEUE_NAME = "testQueue";
+  private static final String TIMESTAMP_KEY = "timestamp";
 
   private static int numMessages = -1;
   private ClientSession session = null;
@@ -76,6 +77,11 @@ public class Consumer extends BaseClient {
         ClientMessage message = consumer.receive(0);
         long endTime = System.currentTimeMillis();
         duration += endTime - startTime;
+
+        long sentTimestamp = message.getLongProperty(TIMESTAMP_KEY);
+        long receivedTimestamp = System.currentTimeMillis();
+        long latency = receivedTimestamp - sentTimestamp;
+        System.out.println("Latency: " + latency + "ms");
       }
 
       session.stop();

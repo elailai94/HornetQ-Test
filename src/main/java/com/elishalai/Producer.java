@@ -9,6 +9,7 @@
 package com.elishalai;
 
 import java.util.Date;
+import java.util.Random;
 
 import org.hornetq.api.core.SimpleString;
 import org.hornetq.api.core.client.ClientMessage;
@@ -19,7 +20,8 @@ import org.hornetq.api.core.client.ClientSessionFactory;
 
 public class Producer extends BaseClient {
   private static final String QUEUE_NAME = "testQueue";
-  private static final String PROPERTY_NAME = "timestamp";
+  private static final String TIMESTAMP_KEY = "timestamp";
+  private static final String BODY_KEY = "body";
   
   private static int numMessages = -1;
   private ClientSession session = null;
@@ -72,7 +74,9 @@ public class Producer extends BaseClient {
       long duration = 0;
       for (int i = 0; i < numMessages; i++) {
         ClientMessage message = session.createMessage(true);
-        message.putLongProperty(PROPERTY_NAME, System.currentTimeMillis());
+        message.putLongProperty(TIMESTAMP_KEY, System.currentTimeMillis());
+        message.putBytesProperty(BODY_KEY, generateMessageBody(1024));
+        System.out.println("Payload size: " + message.getEncodeSize());
 
         long startTime = System.currentTimeMillis();
         producer.send(message);
@@ -94,5 +98,16 @@ public class Producer extends BaseClient {
       // Clean up the base client
       cleanup();
     }
+  }
+
+  // Generate message body
+  private byte[] generateMessageBody(int size) {
+    byte[] bytes = new byte[size];
+    Random random = new Random();
+
+    // Generate random bytes to fill up byte array
+    random.nextBytes(bytes);
+
+    return bytes;
   }
 }
