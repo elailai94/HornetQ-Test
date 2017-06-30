@@ -86,8 +86,7 @@ public class Producer extends BaseClient {
 
       // Calculate the throughput of the producer
       double throughput = calculateThroughput(numMessages, duration);
-      System.out.println(
-        String.format("Throughput: %.2f msg/s", throughput));
+      System.out.println(String.format("Throughput: %.2f msg/s", throughput));
     } catch (Exception e) {
       throw e;
     } finally {
