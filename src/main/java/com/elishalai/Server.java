@@ -21,14 +21,17 @@ import org.hornetq.core.server.HornetQServers;
 public class Server {
   public static void main(String[] args) throws Exception {
     try {
+      String serverAddress = args[0];
+      int serverPort = Integer.parseInt(args[1]);
+
       Configuration configuration = new ConfigurationImpl();
       configuration.setJournalDirectory("target/data/journal");
       configuration.setPersistenceEnabled(false);
       configuration.setSecurityEnabled(false);
 
       HashMap<String, Object> parameters = new HashMap<String, Object>();
-      parameters.put("host", "localhost");
-      parameters.put("port", 5445);
+      parameters.put("host", serverAddress);
+      parameters.put("port", serverPort);
 
       TransportConfiguration transportConfiguration =
         new TransportConfiguration(

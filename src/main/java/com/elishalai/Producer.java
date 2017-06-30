@@ -8,7 +8,6 @@
 
 package com.elishalai;
 
-import java.util.Date;
 import java.util.Random;
 
 import org.hornetq.api.core.SimpleString;
@@ -75,8 +74,8 @@ public class Producer extends BaseClient {
       // Produce messages to the queue
       long duration = 0;
       for (int i = 0; i < numMessages; i++) {
-        ClientMessage message = session.createMessage(true);
-        //message.putLongProperty(TIMESTAMP_KEY, System.currentTimeMillis());
+        ClientMessage message = session.createMessage(false);
+        message.putLongProperty(TIMESTAMP_KEY, System.currentTimeMillis());
         message.putBytesProperty(BODY_KEY, generateMessageBody(messageSize));
 
         long startTime = System.currentTimeMillis();

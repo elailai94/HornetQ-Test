@@ -8,8 +8,6 @@
 
 package com.elishalai;
 
-import java.util.Date;
-
 import org.hornetq.api.core.SimpleString;
 import org.hornetq.api.core.client.ClientConsumer;
 import org.hornetq.api.core.client.ClientMessage;
@@ -71,18 +69,22 @@ public class Consumer extends BaseClient {
       session.start();
       
       // Consume messages from the queue
-      long duration = 0; 
-      for (int i = 0; i < numMessages; i++) {
+      int messagesCount = 0;
+      long duration = 0;
+      while (messagesCount < numMessages) {
         long startTime = System.currentTimeMillis();
         ClientMessage message = consumer.receive();
         long endTime = System.currentTimeMillis();
-        duration += endTime - startTime;
-/*
-        long sentTimestamp = message.getLongProperty(TIMESTAMP_KEY);
-        long receivedTimestamp = System.currentTimeMillis();
-        long latency = receivedTimestamp - sentTimestamp;
-        System.out.println("Latency: " + latency + "ms");
-*/
+
+        if (message != null) {
+          messagesCount += 1;
+          duration += (endTime - startTime);
+
+          long sentTimestamp = message.getLongProperty(TIMESTAMP_KEY);
+          long receivedTimestamp = System.currentTimeMillis();
+          long latency = receivedTimestamp - sentTimestamp;
+          System.out.println("Latency: " + latency + "ms");
+        }
       }
 
       session.stop();
