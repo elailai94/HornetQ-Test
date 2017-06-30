@@ -64,6 +64,7 @@
                 <!-- Server Port -->
                 <argument>5445</argument>
               </arguments>
+              <cleanupDaemonThreads>false</cleanupDaemonThreads>
             </configuration>
           </plugin>
         </plugins>
