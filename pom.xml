@@ -58,6 +58,12 @@
             </executions>
             <configuration>
               <mainClass>com.elishalai.Server</mainClass>
+              <arguments>
+                <!-- Server Address -->
+                <argument>localhost</argument>
+                <!-- Server Port -->
+                <argument>5445</argument>
+              </arguments>
             </configuration>
           </plugin>
         </plugins>
@@ -90,9 +96,13 @@
             <configuration>
               <mainClass>com.elishalai.Producer</mainClass>
               <arguments>
-                <argument>192.168.1.115</argument>
+                <!-- Server Address -->
+                <argument>localhost</argument>
+                <!-- Server Port -->
                 <argument>5445</argument>
+                <!-- Number of Messages -->
                 <argument>2</argument>
+                <!-- Message Size -->
                 <argument>4096</argument>
               </arguments>
               <cleanupDaemonThreads>false</cleanupDaemonThreads>
@@ -128,8 +138,11 @@
             <configuration>
               <mainClass>com.elishalai.Consumer</mainClass>
               <arguments>
-                <argument>192.168.1.115</argument>
+                <!-- Server Address -->
+                <argument>localhost</argument>
+                <!-- Server Port -->
                 <argument>5445</argument>
+                <!-- Number of Messages -->
                 <argument>2</argument>
               </arguments>
               <cleanupDaemonThreads>false</cleanupDaemonThreads>
