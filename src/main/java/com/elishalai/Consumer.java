@@ -88,6 +88,7 @@ public class Consumer extends BaseClient {
         long endTime = System.currentTimeMillis();
 
         if (message != null) {
+          message.acknowledge();
           messagesCount += 1;
           duration += (endTime - startTime);
 
