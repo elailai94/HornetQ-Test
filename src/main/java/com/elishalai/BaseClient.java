@@ -56,7 +56,7 @@ public abstract class BaseClient {
   }
 
   // Calculate the throughput of the client
-  protected double calculateThroughput(long numMessages, long duration) {
+  protected double calculateThroughput(int numMessages, long duration) {
     double durationInSeconds = (1.0 * duration) / 1000;
     double throughput = (1.0 * numMessages) / durationInSeconds;
 

@@ -24,6 +24,7 @@ public class Producer extends BaseClient {
   
   private static int numMessages = -1;
   private static int messageSize = -1;
+  private static Logger throughputLogWriter = null;
   private ClientSession session = null;
 
   public static void main(String[] args) throws Exception {
@@ -32,12 +33,17 @@ public class Producer extends BaseClient {
       int serverPort = Integer.parseInt(args[1]);
       numMessages = Integer.parseInt(args[2]);
       messageSize = Integer.parseInt(args[3]);
+
+      throughputLogWriter = new Logger("producer-throughput.csv");
+      throughputLogWriter.logThroughputLogHeader();
       
       new Producer(serverAddress, serverPort).run();
       System.out.println("Producer executed successfully.");
     } catch (Exception e) {
       System.out.println("Producer wasn't able to execute successfully. An error has occurred.");
       e.printStackTrace();
+    } finally {
+      throughputLogWriter.close();
     }
   }
 
@@ -86,7 +92,7 @@ public class Producer extends BaseClient {
 
       // Calculate the throughput of the producer
       double throughput = calculateThroughput(numMessages, duration);
-      System.out.println(String.format("Throughput: %.2f msg/s", throughput));
+      throughputLogWriter.logThroughputLogEntry(numMessages, duration, throughput);
     } catch (Exception e) {
       throw e;
     } finally {

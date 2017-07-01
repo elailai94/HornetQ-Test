@@ -20,6 +20,8 @@ public class Consumer extends BaseClient {
   private static final String TIMESTAMP_KEY = "timestamp";
 
   private static int numMessages = -1;
+  private static Logger latencyLogWriter = null;
+  private static Logger throughputLogWriter = null;
   private ClientSession session = null;
 
   public static void main(String[] args) throws Exception {
@@ -28,11 +30,20 @@ public class Consumer extends BaseClient {
       int serverPort = Integer.parseInt(args[1]);
       numMessages = Integer.parseInt(args[2]);
       
+      latencyLogWriter = new Logger("latency.csv");
+      latencyLogWriter.logLatencyLogHeader();
+
+      throughputLogWriter = new Logger("consumer-throughput.csv");
+      throughputLogWriter.logThroughputLogHeader();
+      
       new Consumer(serverAddress, serverPort).run();
       System.out.println("Consumer executed successfully.");
     } catch (Exception e) {
       System.out.println("Consumer wasn't able to execute successfully. An error has occurred.");
       e.printStackTrace();
+    } finally {
+      latencyLogWriter.close();
+      throughputLogWriter.close();
     }
   }
 
@@ -80,18 +91,20 @@ public class Consumer extends BaseClient {
           messagesCount += 1;
           duration += (endTime - startTime);
 
+          long messageID = message.getMessageID();
           long sentTimestamp = message.getLongProperty(TIMESTAMP_KEY);
           long receivedTimestamp = System.currentTimeMillis();
           long latency = receivedTimestamp - sentTimestamp;
-          System.out.println("Latency: " + latency + "ms");
+          latencyLogWriter.logLatencyLogEntry(messageID, sentTimestamp,
+            receivedTimestamp, latency);
         }
       }
 
       session.stop();
 
-      // Calculate the throughput of the producer
+      // Calculate the throughput of the consumer
       double throughput = calculateThroughput(numMessages, duration);
-      System.out.println(String.format("Throughput: %.2f msg/s", throughput));
+      throughputLogWriter.logThroughputLogEntry(numMessages, duration, throughput);
     } catch (Exception e) {
       throw e;
     } finally {
