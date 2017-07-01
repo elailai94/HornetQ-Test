@@ -23,7 +23,7 @@ public class Logger {
 
   // Log latency log header to the log file
   public void logLatencyLogHeader() throws Exception {
-    String header = "message_id, sent_timestamp, received_timestamp, latency";
+    String header = "message_id,sent_timestamp,received_timestamp,latency";
     logEntry(header);
   }
 
@@ -31,14 +31,14 @@ public class Logger {
   public void logLatencyLogEntry(long messageID, long sentTimestamp,
     long receivedTimestamp, long latency) throws Exception {
     String entry =
-      String.format("%d, %d, %d, %d", messageID, sentTimestamp,
+      String.format("%d,%d,%d,%d", messageID, sentTimestamp,
         receivedTimestamp, latency);
     logEntry(entry);
   }
 
   // Log throughput log header to the log file
   public void logThroughputLogHeader() throws Exception {
-    String header = "number_of_messages, duration, throughput";
+    String header = "number_of_messages,duration,throughput";
     logEntry(header);
   }
 
@@ -47,7 +47,7 @@ public class Logger {
     double throughput) throws Exception {
     double durationInSeconds = (1.0 * duration) / 1000;
     String entry =
-      String.format("%d, %.2f, %.2f", numMessages, durationInSeconds,
+      String.format("%d,%.2f,%.2f", numMessages, durationInSeconds,
         throughput);
     logEntry(entry);
   }
