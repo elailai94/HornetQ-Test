@@ -38,12 +38,17 @@ public class Consumer extends BaseClient {
       
       new Consumer(serverAddress, serverPort).run();
       System.out.println("Consumer executed successfully.");
-    } catch (Exception e) {
+    } catch (Exception exception) {
       System.out.println("Consumer wasn't able to execute successfully. An error has occurred.");
-      e.printStackTrace();
+      exception.printStackTrace();
     } finally {
-      latencyLogWriter.close();
-      throughputLogWriter.close();
+      if (latencyLogWriter != null) {
+        latencyLogWriter.close();
+      }
+
+      if (throughputLogWriter != null) {
+        throughputLogWriter.close();
+      }
     }
   }
 
@@ -106,8 +111,8 @@ public class Consumer extends BaseClient {
       // Calculate the throughput of the consumer
       double throughput = calculateThroughput(numMessages, duration);
       throughputLogWriter.logThroughputLogEntry(numMessages, duration, throughput);
-    } catch (Exception e) {
-      throw e;
+    } catch (Exception exception) {
+      throw exception;
     } finally {
       if (session != null) {
         session.close();

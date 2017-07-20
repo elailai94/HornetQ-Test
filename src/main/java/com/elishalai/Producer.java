@@ -39,9 +39,9 @@ public class Producer extends BaseClient {
       
       new Producer(serverAddress, serverPort).run();
       System.out.println("Producer executed successfully.");
-    } catch (Exception e) {
+    } catch (Exception exception) {
       System.out.println("Producer wasn't able to execute successfully. An error has occurred.");
-      e.printStackTrace();
+      exception.printStackTrace();
     } finally {
       throughputLogWriter.close();
     }
@@ -93,8 +93,8 @@ public class Producer extends BaseClient {
       // Calculate the throughput of the producer
       double throughput = calculateThroughput(numMessages, duration);
       throughputLogWriter.logThroughputLogEntry(numMessages, duration, throughput);
-    } catch (Exception e) {
-      throw e;
+    } catch (Exception exception) {
+      throw exception;
     } finally {
       if (session != null) {
         session.close();

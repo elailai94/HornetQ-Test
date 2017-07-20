@@ -49,9 +49,9 @@ public class Server {
       server.start();
 
       System.out.println("HornetQ Server started successfully");
-    } catch (Exception e) {
+    } catch (Exception exception) {
       System.out.println("HornetQ Server couldn't start successfully. An error has occured.");
-      e.printStackTrace();
+      exception.printStackTrace();
     }
   }
 }
