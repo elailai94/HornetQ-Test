@@ -9,8 +9,8 @@
 # @version: 1.0 29/06/2017
 #=================================================================
 
-# Clean directory
-echo "Cleaning directory..."
+# Clean project directory
+echo "Cleaning project directory..."
 rm -rf bin
 rm -rf config
 
@@ -67,5 +67,9 @@ esac
 # Validate project directory
 echo "Validating project directory..."
 mvn validate
+
+# Cleaning project directory
+echo "Cleaning project directory..."
+mvn clean
 
 echo "Setup complete."

@@ -16,12 +16,11 @@ import matplotlib.pyplot as plt
 # NOTE: Need to fix this
 def plot_histogram(data):
     num_messages, latency = np.histogram(data, bins='auto')
-    num_messages_cumulative = np.cumsum(num_messages)
     plt.title("Histogram of HornetQ End-to-End Latency")
     plt.xlabel("Latency (ms)")
     plt.ylabel("Number of Messages")
-    plt.plot(latency[:1], num_messages_cumulative)
-    plt.show()
+    plt.plot(latency[:1], num_messages)
+    plt.savefig("latency-histogram.png")
 
 
 # Plot cumulative distribution function of latencies
@@ -33,14 +32,14 @@ def plot_cdf(data):
     plt.xlabel("Latency (ms)")
     plt.ylabel("Probability")
     plt.plot(sorted_data, probability)
-    plt.show()
+    plt.savefig("latency-cdf.png")
 
 
 def main():
     # Load data from the CSV file with the latencies
     latencies = np.loadtxt("latency.csv", delimiter=",", skiprows=1, usecols=3)
-    plot_cdf(latencies)
     #plot_histogram(latencies)
+    plot_cdf(latencies)
 
 
 if __name__ == "__main__":
