@@ -24,11 +24,11 @@ public class Consumer extends BaseClient {
   private static Logger throughputLogWriter = null;
   private ClientSession session = null;
 
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] arguments) throws Exception {
     try {
-      String serverAddress = args[0];
-      int serverPort = Integer.parseInt(args[1]);
-      numMessages = Integer.parseInt(args[2]);
+      String serverAddress = arguments[0];
+      int serverPort = Integer.parseInt(arguments[1]);
+      numMessages = Integer.parseInt(arguments[2]);
       
       latencyLogWriter = new Logger("latency.csv");
       latencyLogWriter.logLatencyLogHeader();

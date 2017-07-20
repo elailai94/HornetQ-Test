@@ -19,10 +19,10 @@ import org.hornetq.core.server.HornetQServer;
 import org.hornetq.core.server.HornetQServers;
 
 public class Server {
-  public static void main(String[] args) throws Exception {
+  public static void main(String[] arguments) throws Exception {
     try {
-      String serverAddress = args[0];
-      int serverPort = Integer.parseInt(args[1]);
+      String serverAddress = arguments[0];
+      int serverPort = Integer.parseInt(arguments[1]);
 
       Configuration configuration = new ConfigurationImpl();
       configuration.setJournalDirectory("target/data/journal");
