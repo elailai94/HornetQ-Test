@@ -1,10 +1,10 @@
 #!/bin/bash
 
 #=================================================================
-# HornetQ-Tests
+# HornetQ-Test
 #
 # 
-# @description: Setup script for HornetQ-Tests
+# @description: Setup script for HornetQ-Test
 # @author: Elisha Lai
 # @version: 1.0 29/06/2017
 #=================================================================
@@ -13,6 +13,9 @@
 echo "Cleaning project directory..."
 rm -rf bin
 rm -rf config
+rm -rf data
+rm -rf lib
+rm -rf *.csv
 
 # Download HornetQ distribution
 echo "Downloading HornetQ distribution..."
@@ -43,9 +46,12 @@ case $OS in
     # Install AIO package
     echo "Installing AIO package..."
     sudo apt-get install libaio1
+    # Install NTP package
+    echo "Installing NTP package..."
+    sudo apt-get install ntp
     # Install Maven package
     echo "Installing Maven package..."
-    sudo apt-get install maven2
+    sudo apt-get install maven
     ;;
   'Darwin')
     # Check if Homebrew is already installed
@@ -55,6 +61,9 @@ case $OS in
       echo "Installing Homebrew..."
       ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     fi
+    # Install NTP package
+    echo "Installing NTP package..."
+    brew install ntp
     # Install Maven package
     echo "Installing Maven package..."
     brew install maven

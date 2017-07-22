@@ -1,6 +1,33 @@
-# HornetQ-Tests
+# HornetQ Test
 ### About
-This repository contains a collection of scripts to test the performance and scalability of HornetQ. They are written entirely in Java.
+This repository contains a program to measure the performance and scalability of [HornetQ](http://hornetq.jboss.org/). The program is written entirely in Java. HornetQ is an open-source project to build a multi-protocol, embeddable, very high performance, clustered, asynchronous messaging system. 
+
+### Setup
+In a new terminal window, download the HornetQ binaries and install the packages by running:
+```Bash
+./setup.sh
+```
+
+### Execution
+In the same terminal window, start the HornetQ standalone server by running:
+```Bash
+cd bin
+./run.sh
+```
+In a new terminal window, start the consumer by running:
+```Bash
+mvn -DskipTests -Pconsumer package
+```
+In a new terminal window, start the producer by running:
+```Bash
+mvn -DskipTests -Pproducer package
+```
+
+### Configuration
+The server address, server port, number of messages and message size can be configured by modifying lines **52-59** and **94-99** in the **pom.xml** file respectively.
+
+### Results Plotting
+A utility script 
 
 ### Testbed
 Each compute cluster is an identical configuration of the following components:
@@ -22,25 +49,8 @@ Each compute cluster is an identical configuration of the following components:
   - 1x Mellanox 10GbE SFP port
 - 1x Mellanox SX1012 10/40 GbE 12-port cluster switch
 
-### Setup
-In one terminal window, download the HornetQ binaries and install packages by running:
-```Bash
-./setup.sh
-```
-### Execution
-In one terminal window, start the HornetQ standalone server by running:
-```Bash
-cd bin
-./run.sh
-```
-In another terminal window, start the consumer by running:
-```Bash
-mvn -DskipTests -Pconsumer package
-```
-In another terminal window, start the producer by running:
-```Bash
-mvn -DskipTests -Pproducer package
-```
-
 ### To Dos
 - Single producer/consumer on a single node with 1 million messages, 4kB each
+
+### License
+* This repository is licensed under the [MIT License](https://github.com/elailai94/hornetq-test/blob/master/LICENSE.md).
