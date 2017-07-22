@@ -1,5 +1,5 @@
 //=============================================================================
-// HornetQ-Tests
+// HornetQ-Test
 //
 // @description: Module for providing functions to work with Consumer objects
 // @author: Elisha Lai

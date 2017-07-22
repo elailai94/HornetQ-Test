@@ -1,5 +1,5 @@
 //=============================================================================
-// HornetQ-Tests
+// HornetQ-Test
 //
 // @description: Module for providing functions to work with Logger objects
 // @author: Elisha Lai
@@ -17,7 +17,6 @@ public class Logger {
   
   // Constructor
   public Logger(String fileName) throws Exception {
-    String filePath = String.format("./results/%s", fileName);
     loggerWriter = new BufferedWriter(new FileWriter(new File(fileName)));
   }
 
