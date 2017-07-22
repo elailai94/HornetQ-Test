@@ -9,6 +9,11 @@
   <name>HornetQ Tests</name>
   <url>http://maven.apache.org</url>
 
+  <properties>
+    <maven.compiler.target>1.8</maven.compiler.target>
+    <maven.compiler.source>1.8</maven.compiler.source>
+  </properties>
+
   <dependencies>
     <dependency>
       <groupId>org.hornetq</groupId>
@@ -102,7 +107,7 @@
                 <!-- Server Port -->
                 <argument>5445</argument>
                 <!-- Number of Messages -->
-                <argument>2</argument>
+                <argument>5</argument>
                 <!-- Message Size (In Bytes) -->
                 <argument>4096</argument>
               </arguments>
@@ -144,7 +149,7 @@
                 <!-- Server Port -->
                 <argument>5445</argument>
                 <!-- Number of Messages -->
-                <argument>2</argument>
+                <argument>5</argument>
               </arguments>
               <cleanupDaemonThreads>false</cleanupDaemonThreads>
             </configuration>
