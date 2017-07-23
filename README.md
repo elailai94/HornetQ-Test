@@ -40,7 +40,7 @@ Each compute cluster is an identical configuration of the following components:
   - 1x Intel P3700 400GB PCIe NVMe solid-state storage device
   - 4x Intel i350 gigabit Ethernet ports
   - 1x Mellanox 40GbE QSFP port
-- 15x Supermicro SYS-6017R-TDF compute nodes. Each consisting of:
+- 2x Supermicro SYS-6017R-TDF compute nodes. Each consisting of:
   - 2x Intel E5-2620v2 CPU
   - 64 GB RAM
   - 3x 1TB SATA3 hard drives

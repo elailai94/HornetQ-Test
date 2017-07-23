@@ -1,26 +1,29 @@
 //=============================================================================
 // HornetQ-Test
 //
-// @description: Module for providing functions to work with Consumer objects
+// @description: Module for providing functions to work with Producer objects
 // @author: Elisha Lai
 // @version: 1.0 27/06/2017
 //=============================================================================
 
 package com.elishalai;
 
+import java.nio.ByteBuffer;
+import java.util.Random;
+
+import org.hornetq.api.core.HornetQBuffer;
 import org.hornetq.api.core.SimpleString;
-import org.hornetq.api.core.client.ClientConsumer;
 import org.hornetq.api.core.client.ClientMessage;
+import org.hornetq.api.core.client.ClientProducer;
 import org.hornetq.api.core.client.ClientSession;
 import org.hornetq.api.core.client.ClientSession.QueueQuery;
 import org.hornetq.api.core.client.ClientSessionFactory;
 
-public class Consumer extends BaseClient {
+public class ProducerClient extends BaseClient {
   private static final String QUEUE_NAME = "testQueue";
-  private static final String TIMESTAMP_KEY = "timestamp";
-
+  
   private static int numMessages = -1;
-  private static Logger latencyLogWriter = null;
+  private static int messageSize = -1;
   private static Logger throughputLogWriter = null;
   private ClientSession session = null;
 
@@ -29,35 +32,27 @@ public class Consumer extends BaseClient {
       String serverAddress = arguments[0];
       int serverPort = Integer.parseInt(arguments[1]);
       numMessages = Integer.parseInt(arguments[2]);
-      
-      latencyLogWriter = new Logger("latency.csv");
-      latencyLogWriter.logLatencyLogHeader();
+      messageSize = Integer.parseInt(arguments[3]);
 
-      throughputLogWriter = new Logger("consumer-throughput.csv");
+      throughputLogWriter = new Logger("producer-throughput.csv");
       throughputLogWriter.logThroughputLogHeader();
       
-      new Consumer(serverAddress, serverPort).run();
-      System.out.println("Consumer executed successfully.");
+      new ProducerClient(serverAddress, serverPort).run();
+      System.out.println("Producer executed successfully.");
     } catch (Exception exception) {
-      System.out.println("Consumer wasn't able to execute successfully. An error has occurred.");
+      System.out.println("Producer wasn't able to execute successfully. An error has occurred.");
       exception.printStackTrace();
     } finally {
-      if (latencyLogWriter != null) {
-        latencyLogWriter.close();
-      }
-
-      if (throughputLogWriter != null) {
-        throughputLogWriter.close();
-      }
+      throughputLogWriter.close();
     }
   }
 
   // Constructor
-  private Consumer(String serverAddress, int serverPort) {
+  private ProducerClient(String serverAddress, int serverPort) {
     super(serverAddress, serverPort);
   }
 
-  // Receive messages from the server
+  // Send messages to the server
   private void run() throws Exception {
     try {
       // Initialize the base client
@@ -70,45 +65,30 @@ public class Consumer extends BaseClient {
       SimpleString simpleString = new SimpleString(QUEUE_NAME);
       QueueQuery queueQuery = session.queueQuery(simpleString);
       if (!queueQuery.isExists()) {
-        session.createQueue(QUEUE_NAME, QUEUE_NAME, false);
+        session.createQueue(QUEUE_NAME, QUEUE_NAME, true);
       }
 
       session.close();
       session = null;
 
-      // Create a session to consume messages
+      // Create a session to produce messages
       session = getSessionFactory().createSession();
 
-      // Create a consumer to consume messages from the queue
-      ClientConsumer consumer = session.createConsumer(QUEUE_NAME);
+      // Create a producer to produce messages to the queue
+      ClientProducer producer = session.createProducer(QUEUE_NAME);
 
-      session.start();
-      
-      // Consume messages from the queue
-      int messagesCount = 0;
+      // Produce messages to the queue
       long duration = 0;
-      while (messagesCount < numMessages) {
+      for (int i = 0; i < numMessages; i++) {
+        ClientMessage message = createMessage(messageSize);
+
         long startTime = System.currentTimeMillis();
-        ClientMessage message = consumer.receive();
+        producer.send(message);
         long endTime = System.currentTimeMillis();
-
-        if (message != null) {
-          message.acknowledge();
-          messagesCount += 1;
-          duration += (endTime - startTime);
-
-          long messageID = message.getMessageID();
-          long sentTimestamp = message.getLongProperty(TIMESTAMP_KEY);
-          long receivedTimestamp = System.currentTimeMillis();
-          long latency = receivedTimestamp - sentTimestamp;
-          latencyLogWriter.logLatencyLogEntry(messageID, sentTimestamp,
-            receivedTimestamp, latency);
-        }
+        duration += endTime - startTime;
       }
 
-      session.stop();
-
-      // Calculate the throughput of the consumer
+      // Calculate the throughput of the producer
       double throughput = calculateThroughput(numMessages, duration);
       throughputLogWriter.logThroughputLogEntry(numMessages, duration, throughput);
     } catch (Exception exception) {
@@ -121,5 +101,22 @@ public class Consumer extends BaseClient {
       // Clean up the base client
       cleanup();
     }
+  }
+
+  // Create message
+  private ClientMessage createMessage(int size) {
+    byte[] bytes = new byte[size];
+    Random random = new Random();
+
+    // Generate random bytes to fill up byte array
+    random.nextBytes(bytes);
+
+    // Put current timestamp in the first four bytes of the byte array
+    ClientMessage message = session.createMessage(true);
+    HornetQBuffer buffer = message.getBodyBuffer();
+    buffer.writeLong(System.currentTimeMillis());
+    buffer.writeBytes(bytes);
+
+    return message;
   }
 }
